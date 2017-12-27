@@ -39,10 +39,10 @@ public:
 	int GetSize(); // узнать число звеньев в списке
 	Node* GetHead(); // получить указатель на первое звено списка
 	void Inverse(); // инвертировать список, т.е. звенья должны идти в обратном порядке
-	List Merge(Node* node, const List& list2); // создать список3, добавив список2 в текущий список после указателя node  
+	List Merge(Node* nod, const List& list2); // создать список3, добавив список2 в текущий список после указателя node  
 	List Merge(const List& list2); // создать список3, добавив в конец текущего списка список2
 
-	friend ostream& operator<<(ostream& os, const List& l);
+	friend ostream& operator<<(ostream& ostr, const List& l);
 };
 
 #endif
