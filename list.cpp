@@ -1,233 +1,275 @@
 #include "list.h"
 
-List::List(const List& list2) {
-	if (list2.head != NULL) {
-		Node* ptr = list2.head->next;
+List::List(const List& list2)
+{
+	if (list2.head != NULL) 
+	{ 
+		Node* node = list2.head->next;
 		head = new Node(list2.head->data, NULL);
-		Node* ptr2 = head;
-		while (ptr != NULL) {
-			ptr2->next = new Node(ptr->data, NULL);
-			ptr = ptr->next;
-			ptr2 = ptr2->next;
+		Node* node1 = head;
+		while (node != NULL)
+		{
+			node1->next = new Node(node->data, NULL);
+			node = node->next;
+			node1 = node1->next;
 		}
 	}
 	else head = NULL;
 }
-
-List:: ~List() {
+List:: ~List()
+{
 	Clean();
 }
 
 
 
 
-List& List:: operator=(const List& list2) {
+List& List:: operator=(const List& list2) 
+{
 
 	if (list2.head != head)	Clean(); else return *this;
-	if (list2.head != NULL) {
-		Node* ptr = list2.head->next;
+	if (list2.head != NULL) 
+	{
+		Node* node = list2.head->next;
 		head = new Node(list2.head->data, NULL);
-		Node* ptr2 = head;
-		while (ptr != NULL) {
-			ptr2->next = new Node(ptr->data, NULL);
-			ptr = ptr->next;
-			ptr2 = ptr2->next;
+		Node* node1 = head;
+		while (node != NULL)
+		{
+			node1->next = new Node(node->data, NULL);
+			node = node->next;
+			node1 = node1->next;
 		}
 		return (*this);
 
 	}
 
 }
-
-void List::Clean() {
-	if (head != NULL) {
-		if (head->next != NULL) {
-			Node* Ptr = head->next->next;
-			Node* Ptr_before = head->next;
-			delete head;
-			head = NULL;
-			while (Ptr != NULL) {
-				delete Ptr_before;
-				Ptr_before = Ptr;
-				Ptr = Ptr->next;
-			}
-			delete Ptr_before;
-		}
-		else {
-			delete head;
-			head = NULL;
-		}
-	}
-}
-
-
-void List::InsertToHead(const DataType& d) {
-
-	if (head == NULL) head = new Node(d, NULL);
-	else head = new Node(d, head);
-}
-
-void List::InsertToTail(const DataType& d) {
-
-	if (head == NULL) head = new Node(d, NULL);
-
-	else {
-		Node* ptr = head;
-		while (ptr->next != NULL) ptr = ptr->next;
-		ptr->next = new Node(d, NULL);
-	}
-}
-
-void List::InsertAfter(Node* node, const DataType& d) {
-	if (node == NULL) {
-		this->InsertToTail(d);
-	}
-	else {
-		Node* ptr = head;
-		while (node != ptr) ptr = ptr->next;
-		Node* ptr2 = node->next;
-		ptr->next = new Node(d, ptr2);
-	}
-}
-
-void List::Delete(const DataType& d) {
-	int y = 0;
-	Node* ptr_prev = head;
-	if (head != NULL) {
-		Node* ptr = head;
-		if (ptr->data != d) {
-			ptr = ptr->next;
-		}
-		else {
-			y = 1;
-			Node* ptr_head = head->next;
-			delete head;
-			head = ptr_head;
-		}
-		if (y == 0) {
-			while ((ptr != NULL) && (ptr->data != d)) {
-				ptr = ptr->next;
-				ptr_prev = ptr_prev->next;
-			}
-			if (ptr == NULL) cout << "uncorrect, is is valtype no here" << endl; else {
-				ptr_prev->next = ptr->next;
-				delete ptr;
-			}
-		}
-	}
-}
-
-
-Node* List::Search(const DataType& d) {
-
-	Node* ptr = head;
-	while ((ptr != NULL) && (ptr->data != d)) ptr = ptr->next;
-	if (ptr == NULL) return NULL; else return ptr;
-}
-
-int List::GetSize() {
-	Node* ptr = head;
-	int k = 0;
-	while (ptr != NULL) {
-		k++;
-		ptr = ptr->next;
-	}
-	return k;
-}
-
-
-Node* List::GetHead() {
-	return head;
-}
-
-void List::Inverse() {
-	Node* ptr_1 = head;
-	Node* ptr_2;
-	Node* ptr_3;
-	if (head != NULL) {
-		ptr_2 = head->next;
-		head->next = NULL;
-		if (ptr_2 != NULL) {
-			ptr_3 = ptr_2->next;
-			while (ptr_3 != NULL) {
-				ptr_2->next = ptr_1;
-				ptr_1 = ptr_2;
-				ptr_2 = ptr_3;
-				ptr_3 = ptr_3->next;
-			}
-			ptr_2->next = ptr_1;
-			head = ptr_2;
-		}
-	}
-}
-
-
-List List::Merge(Node* node, const List& list2)
+bool List:: operator ==(const List& list2) const
 {
-	List a;
-	Node* ptr = head;
-	if (node != NULL) {
-		while (ptr != node) {
-			a.InsertToTail(ptr->data);
-			ptr = ptr->next;
-		}
-		a.InsertToTail(ptr->data);
-		ptr = ptr->next;
-		Node* ptr_2 = list2.head;
-		while (ptr_2 != NULL) {
-			a.InsertToTail(ptr_2->data);
-			ptr_2 = ptr_2->next;
-		}
-		while (ptr != NULL) {
-			a.InsertToTail(ptr->data);
-			ptr = ptr->next;
-		}
-		return a;
+
+	Node* nnode1 = head;
+	Node* nnode2 = list2.head;
+	while ((nnode1 != NULL) && (nnode2 != NULL) && (nnode1->data == nnode2->data))
+	{
+		nnode1 = nnode1->next;
+		nnode2 = nnode2->next;
 	}
-	else {
-		a = (*this);
-		return a;
-	}
+	if ((nnode1 == NULL) && (nnode2 == NULL)) return true;
+	else return false;
 }
-
-
-List List::Merge(const List& list2)
-{
-	List a;
-	Node* ptr = head;
-	while (ptr != NULL) {
-		a.InsertToTail(ptr->data);
-		ptr = ptr->next;
-	}
-	ptr = list2.head;
-	while (ptr != NULL) {
-		a.InsertToTail(ptr->data);
-		ptr = ptr->next;
-	}
-	return a;
-}
-
-
-ostream& operator<<(ostream& os, const List& l)
+ostream& operator<<(ostream& ostr, const List& l)
 
 {
 	Node* tmp = l.head;
 	while (tmp != NULL)
 	{
-		os << tmp->data << " ";
+		ostr << tmp->data << " ";
 		tmp = tmp->next;
 	}
-	return os;
+	return ostr;
 }
 
-bool List:: operator ==(const List& list2) const {
 
-	Node* ptr_1 = head;
-	Node* ptr_2 = list2.head;
-	while ((ptr_1 != NULL) && (ptr_2 != NULL) && (ptr_1->data == ptr_2->data)) {
-		ptr_1 = ptr_1->next;
-		ptr_2 = ptr_2->next;
+void List::InsertToHead(const DataType& d)
+{
+
+	if (head == NULL) head = new Node(d, NULL);
+	else head = new Node(d, head);
+}
+
+void List::InsertToTail(const DataType& d)
+{
+
+	if (head == NULL) head = new Node(d, NULL);
+
+	else 
+	{
+		Node* node = head;
+		while (node->next != NULL) node = node->next;
+		node->next = new Node(d, NULL);
 	}
-	if ((ptr_1 == NULL) && (ptr_2 == NULL)) return true;
-	else return false;
 }
+
+void List::InsertAfter(Node* nod, const DataType& d)
+{
+	if (nod == NULL)
+	{
+		this->InsertToTail(d);
+	}
+	else
+	{
+		Node* node = head;
+		while (nod != node) node = node->next;
+		Node* ptr2 = nod->next;
+		node->next = new Node(d, ptr2);
+	}
+}
+
+void List::Delete(const DataType& d)
+{
+	int y = 0;
+	Node*  nodelast= head;
+	if (head != NULL) 
+	{
+		Node* node = head;
+		if (node->data != d) 
+		{
+			node = node->next;
+		}
+		else 
+		{
+			y = 1;
+			Node* headnode = head->next;
+			delete head;
+			head = headnode;
+		}
+		if (y == 0) 
+		{
+			while ((node != NULL) && (node->data != d)) 
+			{
+				node = node->next;
+				nodelast = nodelast->next;
+			}
+			if (node == NULL) cout << "WRONG" << endl; 
+			else 
+			{
+				nodelast->next = node->next;
+				delete node;
+			}
+		}
+	}
+}
+
+void List::Clean()
+{
+	if (head != NULL)
+	{
+		if (head->next != NULL)
+		{
+			Node* nnode = head->next->next;
+			Node* nnodefirst = head->next;
+			delete head;
+			head = NULL;
+			while (nnode != NULL)
+			{
+				delete nnodefirst;
+				nnodefirst = nnode;
+				nnode = nnode->next;
+			}
+			delete nnodefirst;
+		}
+		else
+		{
+			delete head;
+			head = NULL;
+		}
+	}
+}
+
+
+Node* List::Search(const DataType& d) 
+{
+
+	Node* node = head;
+	while ((node != NULL) && (node->data != d)) node = node->next;
+	if (node == NULL) return NULL; else return node;
+}
+
+int List::GetSize() 
+{
+	Node* node = head;
+	int k = 0;
+	while (node != NULL)
+	{
+		k++;
+		node = node->next;
+	}
+	return k;
+}
+
+
+Node* List::GetHead()
+{
+	return head;
+}
+
+
+
+List List::Merge(Node* nod, const List& list2)
+{
+	List a;
+	Node* node = head;
+	if (nod != NULL) 
+	{
+		while (node != nod) 
+		{
+			a.InsertToTail(node->data);
+			node = node->next;
+		}
+		a.InsertToTail(node->data);
+		node = node->next;
+		Node* nnode2 = list2.head;
+		while (nnode2 != NULL)
+		{
+			a.InsertToTail(nnode2->data);
+			nnode2 = nnode2->next;
+		}
+		while (node != NULL)
+		{
+			a.InsertToTail(node->data);
+			node = node->next;
+		}
+		return a;
+	}
+	else
+	{
+		a = (*this);
+		return a;
+	}
+}
+
+void List::Inverse()
+{
+	Node* nnode1 = head;
+	Node* nnode2;
+	Node* nnode3;
+	if (head != NULL)
+	{
+		nnode2 = head->next;
+		head->next = NULL;
+		if (nnode2 != NULL)
+		{
+			nnode3 = nnode2->next;
+			while (nnode3 != NULL)
+			{
+				nnode2->next = nnode1;
+				nnode1 = nnode2;
+				nnode2 = nnode3;
+				nnode3 = nnode3->next;
+			}
+			nnode2->next = nnode1;
+			head = nnode2;
+		}
+	}
+}
+
+
+
+List List::Merge(const List& list2)
+{
+	List a;
+	Node* node = head;
+	while (node != NULL)
+	{
+		a.InsertToTail(node->data);
+		node = node->next;
+	}
+	node = list2.head;
+	while (node != NULL) 
+	{
+		a.InsertToTail(node->data);
+		node = node->next;
+	}
+	return a;
+}
+
